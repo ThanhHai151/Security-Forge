@@ -31,9 +31,17 @@ feeds candidates to the [`ai_framework`](../ai_framework/README.md).
 - [`../defense/`](../defense/README.md) — the same search identifies risks to harden.
 - [`../frontend/`](../frontend/README.md) — the "Vuln Search" tab.
 
+## Contents
+
+- **[`catalog/`](catalog/INDEX.md)** — the vulnerability dictionary: one folder per vuln class
+  (`catalog/<slug>/README.md`), each a dictionary card with a *"Finding CVEs from scratch"*
+  section (NVD, CVE.org, Exploit-DB, GitHub Advisories, OSV, r/netsec, HackerOne) and a link to
+  its deep-dive note in `../Troubleshooting_Guide/`. 29 entries; SQLi/XSS/SSRF fully written, the
+  rest scaffolded from [`catalog/ENTRY_TEMPLATE.md`](catalog/ENTRY_TEMPLATE.md).
+
 ## Planned contents
 
-- The technique catalog (seeded from the KB categories).
-- A CVE lookup module with a cache and an offline seed set.
+- A CVE lookup module with a cache and an offline seed set (live NVD/OSV queries, opt-in,
+  offline-graceful) — the dynamic complement to the static catalog above.
 
-**Status:** skeleton — directory purpose only.
+**Status:** catalog seeded; CVE lookup module pending.
