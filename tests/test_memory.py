@@ -38,6 +38,35 @@ def test_recall_ranks_by_relevance(tmp_path):
     assert {r.id for r in top} == {"2", "3"}  # both target matches beat the non-match
 
 
+def test_recalled_memory_is_injected_into_system_prompt(tmp_path):
+    path = tmp_path / "mem.jsonl"
+    store = JsonlMemoryStore(path)
+    target = "http://203.0.113.10"
+    store.write(
+        MemoryRecord(
+            id="fact1",
+            kind=MemoryKind.target_fact,
+            target=target,
+            technique="http_get",
+            body="server header leaks nginx/1.18",
+        )
+    )
+
+    seen_systems: list[str] = []
+
+    class _Spy(OfflineBackend):
+        def act(self, system, transcript, config, tools):
+            seen_systems.append(system)
+            return ActResponse(reasoning="stop", done=True)
+
+    config = RunConfig(goal="x", target=target, authorized_targets={"203.0.113.10"})
+    run_loop(config, _Spy(), _registry(), store)
+
+    assert seen_systems  # the backend was called
+    assert "Relevant memory recalled" in seen_systems[0]
+    assert "nginx/1.18" in seen_systems[0]  # the recalled fact actually reached the model
+
+
 def test_anti_loop_skips_known_dead_end(tmp_path):
     path = tmp_path / "mem.jsonl"
     store = JsonlMemoryStore(path)

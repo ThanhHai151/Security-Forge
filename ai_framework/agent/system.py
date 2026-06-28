@@ -5,7 +5,27 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from ai_framework.agent.contracts import RunConfig
+from ai_framework.agent.contracts import MemoryRecord, RunConfig
+
+
+def render_memory_block(records: list[MemoryRecord]) -> str:
+    """Render recalled memory for injection into the system prompt (Step 5).
+
+    Returns "" when there is nothing to recall, so callers can append unconditionally.
+    """
+    if not records:
+        return ""
+    lines = [f"- [{r.kind}] {r.technique or 'general'}: {r.body}" for r in records]
+    return (
+        "Relevant memory recalled from prior steps/sessions "
+        "(use it; do not repeat known dead ends):\n" + "\n".join(lines)
+    )
+
+
+def with_memory(system: str, records: list[MemoryRecord]) -> str:
+    """Append the recalled-memory block to a system prompt if there is any."""
+    block = render_memory_block(records)
+    return f"{system}\n\n{block}" if block else system
 
 
 def build_system_prompt(config: RunConfig, tools: list[dict[str, Any]]) -> str:

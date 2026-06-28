@@ -20,11 +20,14 @@ from ai_framework.agent.contracts import (
     ToolResult,
     Turn,
 )
-from ai_framework.agent.system import build_system_prompt
+from ai_framework.agent.system import build_system_prompt, with_memory
 from ai_framework.headroom import TurnRequest, fit
 from ai_framework.memory.store import JsonlMemoryStore
 from ai_framework.models.base import Backend
 from ai_framework.tools.base import ToolContext, ToolRegistry
+
+# Top-K recalled into context when Headroom is off (Headroom uses budget.memory_recall_k).
+DEFAULT_RECALL_K = 5
 
 
 def _body(call: ToolCall) -> str:
@@ -39,27 +42,34 @@ def run_loop(
     budget: Budget | None = None,
 ) -> Run:
     tools = registry.schemas()
-    system = build_system_prompt(config, tools)
+    base_system = build_system_prompt(config, tools)
     ctx = ToolContext(authorized_targets=config.authorized_targets)
     run = Run(config=config)
 
     for i in range(config.step_budget):
-        # Headroom: shape what reaches the backend so the call stays inside the window
-        # with reserved output headroom. Off (budget=None) -> unchanged behaviour.
+        # Recall relevant memory and inject it into the system prompt so the model
+        # actually uses what it has learned (Step 5). Done every turn since memory grows.
+        recall_k = budget.memory_recall_k if budget is not None else DEFAULT_RECALL_K
+        recalled = memory.recall(config.target, "", recall_k) if memory else []
+
         if budget is not None:
-            recalled = (
-                memory.recall(config.target, "", budget.memory_recall_k) if memory else []
-            )
+            # Headroom: shape what reaches the backend so the call stays inside the window
+            # with reserved output headroom. It may shrink the recalled memory to fit.
             fitted = fit(
                 TurnRequest(
-                    system=system, transcript=run.transcript, tools=tools, memory=recalled
+                    system=base_system,
+                    transcript=run.transcript,
+                    tools=tools,
+                    memory=recalled,
                 ),
                 budget,
             )
             run.compaction_reports.append(fitted.report)
-            action = backend.act(fitted.system, fitted.transcript, config, fitted.tools)
+            call_system = with_memory(fitted.system, fitted.memory)
+            action = backend.act(call_system, fitted.transcript, config, fitted.tools)
         else:
-            action = backend.act(system, run.transcript, config, tools)
+            call_system = with_memory(base_system, recalled)
+            action = backend.act(call_system, run.transcript, config, tools)
         if action.done:
             run.outcome = "done"
             break
@@ -100,7 +110,7 @@ def run_loop(
             tool_results=results,
         )
         run.transcript.append(turn)
-        turn.next_plan = backend.plan(system, run.transcript, config)
+        turn.next_plan = backend.plan(call_system, run.transcript, config)
     else:
         run.outcome = "step_budget_reached"
 
