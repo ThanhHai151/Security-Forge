@@ -30,4 +30,5 @@ list of tool calls. Swapping backends must not change how the agent loop is writ
 - Which backend is active is a config choice (`offline` vs `anthropic`).
 - The key comes from an environment variable; secrets never live in files.
 
-**Status:** skeleton — directory purpose only.
+**Status:** implemented — `base.py` (Backend protocol), `offline.py` (heuristic, no key),
+`anthropic_backend.py` (Claude native tool-use, `claude-opus-4-8`).

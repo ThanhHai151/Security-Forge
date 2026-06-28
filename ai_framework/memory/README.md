@@ -29,4 +29,5 @@ relevant ones back into the loop.
 
 NousResearch / **hermes-agent** — its memory capability.
 
-**Status:** skeleton — directory purpose only.
+**Status:** implemented — `store.py` provides JSON-lines persistence, top-K `recall`, and
+the `has_failed_attempt` anti-loop guard (record kinds: `target_fact`, `attempt`, `lesson`).

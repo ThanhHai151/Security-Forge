@@ -36,4 +36,5 @@ logged, and reasoned about.
 
 Z4nzu / **hackingtool** — a menu/catalog of security tools organized by category.
 
-**Status:** skeleton — directory purpose only.
+**Status:** implemented (starter set) — `base.py` (`Tool`, `ToolRegistry`, safety gate) plus
+`builtin.py` (`http_get` with target authorization, `note_finding`). Add more tools here.

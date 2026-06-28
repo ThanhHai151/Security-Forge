@@ -96,6 +96,7 @@ Component responsibilities:
 | `skills/`   | On-demand knowledge; maps each KB topic to a skill manifest. | Anthropic-Cybersecurity-Skills |
 | `tools/`    | Categorised, runnable actions.      | hackingtool                        |
 | `memory/`   | Persistent facts across sessions.   | hermes-agent                       |
+| `headroom/` | Context-window budgeting & compaction in front of the backend. | — |
 | `research/` | Fills knowledge gaps autonomously.  | —                                  |
 | `notes/`    | Structured, reviewable findings.    | —                                  |
 | `models/`   | Pluggable LLM backend (Claude / offline). | —                            |

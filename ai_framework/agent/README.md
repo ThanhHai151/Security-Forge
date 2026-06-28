@@ -36,4 +36,6 @@ contains the **log-driven next-step planner** the brief asks for.
 
 NousResearch / **hermes-agent** — the agentic loop and its tool-calling style.
 
-**Status:** skeleton — directory purpose only.
+**Status:** implemented (offline + Claude backends). The Hermes turn protocol, loop, and
+log-driven planner live in `loop.py` / `contracts.py` / `system.py`. See
+[`docs/HERMES_INTEGRATION_STEPS.md`](../../docs/HERMES_INTEGRATION_STEPS.md).

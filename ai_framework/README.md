@@ -16,6 +16,7 @@ of following a fixed script. The same engine, pointed inward, powers
 | [`research/`](research/README.md) | Self-research to fill gaps the knowledge base doesn't cover.     |
 | [`notes/`](notes/README.md)       | Structured, reviewable findings and to-dos.                      |
 | [`models/`](models/README.md)     | Pluggable LLM backend that supplies the reasoning.               |
+| [`headroom/`](headroom/README.md) | Context-window budgeting & compaction in front of the backend.   |
 
 ## How they work together
 

@@ -136,6 +136,52 @@ secforge/
 
 ---
 
+## Tech stack (languages per layer)
+
+The languages SecForge is built in, grouped by where they apply. The rule of thumb:
+**TypeScript on the front, Python as the primary backend/agent language, Rust for the
+hot paths**, with the usual data/config glue.
+
+### Frontend (`frontend/`)
+| Language | Role | Notes |
+|----------|------|-------|
+| **HTML** | Page structure | The viewer shell. |
+| **CSS** (+ Tailwind) | Styling | Utility-first; one design system. |
+| **TypeScript** (`.ts` / `.tsx`) | All UI logic | Write TS, not raw JS — it compiles to JS. |
+| JavaScript / `.mjs` | Build/config only | e.g. `vite.config.mjs`; minimal. |
+
+> Framework (not a language, but the choice): **React + Vite** (or Svelte). EN/VI toggle
+> lives here against [`i18n/`](i18n/README.md).
+
+### Backend & AI framework (`backend/`, `ai_framework/`, `defense/`, `vuln_search/`)
+| Language | Role | When |
+|----------|------|------|
+| **Python** | Primary backend, **the Hermes agent loop**, memory, models, skills, tools, research, the planned **Headroom** module | Default for everything agent/LLM/MCP — the ecosystem is Python-first. |
+| **Rust** | Performance-critical paths: fast tool runners, token counting, sandboxed lab targets, anything Python is too slow for | Drop down only for hot paths. |
+
+> The Hermes integration (this section's plan) and Headroom are implemented in **Python**;
+> see the model contract in [`ai_framework/models/`](ai_framework/models/README.md).
+
+### Data, config & ops (cross-cutting)
+| Language | Role |
+|----------|------|
+| **SQL** | Persistence for `knowledge_base/`, `vuln_search/`, `memory/` |
+| **Bash** | Scripts, automation, CTF tooling, deploy |
+| **YAML / TOML / JSON** | Config (`pyproject.toml`, `package.json`, CI, Docker) |
+| **Dockerfile** | Containerizing backend + labs |
+| **Markdown** | All docs (this skeleton) |
+
+### The minimal list to commit to
+```
+FE:  HTML, CSS (+Tailwind), TypeScript
+BE:  Python (primary)  ·  Rust (performance / hot paths)
+Ops: SQL, Bash, YAML/TOML/JSON, Docker, Markdown
+```
+Five languages you actually *learn* (TypeScript, Python, Rust, SQL, Bash); the rest is
+markup/config picked up as needed.
+
+---
+
 ## Status & next steps
 
 This is a **documentation skeleton**. Nothing executes yet — by design. To move forward,
