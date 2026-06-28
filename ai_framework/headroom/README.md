@@ -24,8 +24,21 @@ nothing is lost silently.
 
 ## Token accounting (`budget.py`)
 
-`count_tokens` is the single estimator everything calls. The offline path uses a ~4-chars/token
-heuristic; a Claude backend can rebind it to exact counting in one place.
+`count_tokens` is the single estimator everything calls, and it is **pluggable** — install a
+more accurate one in one place:
+
+```python
+from ai_framework.headroom import set_token_counter, tiktoken_counter, reset_token_counter
+set_token_counter(tiktoken_counter())   # local, exact-per-encoding (needs `pip install .[headroom]`)
+# ... run ...
+reset_token_counter()                    # back to the chars/4 heuristic
+```
+
+- **Default**: ~4-chars/token heuristic — no dependencies, deliberately slightly conservative.
+- **`tiktoken_counter()`**: local and exact for its encoding (`cl100k_base`). Not Claude's
+  tokenizer, but a far closer proxy than the heuristic and needs no network.
+- **Ground truth for Claude**: the Anthropic `messages.count_tokens` API on the assembled
+  request. Exact but remote, so use it to verify budgets rather than per-string in the ladder.
 
 ## The compaction ladder (`fit.py`)
 

@@ -8,12 +8,13 @@ else calls so the estimator can be replaced in one place.
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from typing import Any
 
 from ai_framework.agent.contracts import MemoryRecord, Turn
 
 # Rough bytes-per-token for English+JSON. Deliberately conservative so we compact a little
-# early rather than overflow. Revisit against Claude's exact counts (Open question §6).
+# early rather than overflow. The default when no exact tokenizer is installed.
 _CHARS_PER_TOKEN = 4
 
 
@@ -24,8 +25,43 @@ def estimate_tokens(text: str) -> int:
     return max(1, (len(text) + _CHARS_PER_TOKEN - 1) // _CHARS_PER_TOKEN)
 
 
-# Public alias; a backend may rebind this to an exact tokenizer.
-count_tokens = estimate_tokens
+# The active counter. Everything in Headroom counts through ``count_tokens`` so an exact
+# tokenizer can be installed in exactly one place (INTEGRATION_PLAN §6 open question).
+_counter: Callable[[str], int] = estimate_tokens
+
+
+def set_token_counter(fn: Callable[[str], int]) -> None:
+    """Install the token counter Headroom uses (e.g. an exact tokenizer for a backend)."""
+    global _counter
+    _counter = fn
+
+
+def reset_token_counter() -> None:
+    """Restore the default heuristic counter."""
+    global _counter
+    _counter = estimate_tokens
+
+
+def count_tokens(text: str) -> int:
+    """Count tokens with the active counter (heuristic unless one was installed)."""
+    return _counter(text)
+
+
+def tiktoken_counter(encoding_name: str = "cl100k_base") -> Callable[[str], int]:
+    """A local, exact-per-encoding counter backed by ``tiktoken`` (lazy import).
+
+    Note: ``cl100k_base`` is not Claude's tokenizer, but it is a far closer local proxy
+    than chars/4 and needs no network. For ground-truth Claude counts use the Anthropic
+    ``messages.count_tokens`` API on the assembled request.
+    """
+    import tiktoken  # imported lazily so the offline path never needs the dependency
+
+    enc = tiktoken.get_encoding(encoding_name)
+
+    def count(text: str) -> int:
+        return len(enc.encode(text)) if text else 0
+
+    return count
 
 
 def turn_tokens(turn: Turn) -> int:

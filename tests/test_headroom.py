@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from ai_framework.agent.contracts import (
     Budget,
     MemoryKind,
@@ -12,7 +14,14 @@ from ai_framework.agent.contracts import (
     Turn,
 )
 from ai_framework.agent.loop import run_loop
-from ai_framework.headroom import TurnRequest, estimate_tokens, fit
+from ai_framework.headroom import (
+    TurnRequest,
+    estimate_tokens,
+    fit,
+    reset_token_counter,
+    set_token_counter,
+)
+from ai_framework.headroom.budget import count_tokens, tiktoken_counter
 from ai_framework.models.offline import OfflineBackend
 from ai_framework.tools.base import ToolRegistry
 from ai_framework.tools.builtin import HttpGetTool, NoteFindingTool
@@ -32,6 +41,24 @@ def test_estimate_tokens_monotonic() -> None:
     assert estimate_tokens("") == 0
     assert estimate_tokens("a") == 1
     assert estimate_tokens("a" * 40) == 10
+
+
+def test_pluggable_token_counter_is_used_then_resets() -> None:
+    # Install a word-count counter; everything in Headroom must route through it.
+    set_token_counter(lambda text: len(text.split()))
+    try:
+        assert count_tokens("one two three") == 3
+    finally:
+        reset_token_counter()
+    # After reset, the default heuristic is back.
+    assert count_tokens("aaaa") == 1
+
+
+def test_tiktoken_counter_when_available() -> None:
+    tiktoken = pytest.importorskip("tiktoken")  # noqa: F841
+    count = tiktoken_counter()
+    assert count("") == 0
+    assert count("hello world") >= 1
 
 
 def test_budget_reserves_output_headroom() -> None:

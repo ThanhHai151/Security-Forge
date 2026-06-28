@@ -8,7 +8,13 @@ always producing a ``CompactionReport``. It does not reason; it measures and sha
 
 from __future__ import annotations
 
-from ai_framework.headroom.budget import count_tokens, estimate_tokens
+from ai_framework.headroom.budget import (
+    count_tokens,
+    estimate_tokens,
+    reset_token_counter,
+    set_token_counter,
+    tiktoken_counter,
+)
 from ai_framework.headroom.fit import FittedRequest, TurnRequest, fit
 
 __all__ = [
@@ -17,4 +23,7 @@ __all__ = [
     "count_tokens",
     "estimate_tokens",
     "fit",
+    "reset_token_counter",
+    "set_token_counter",
+    "tiktoken_counter",
 ]

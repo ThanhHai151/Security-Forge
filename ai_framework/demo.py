@@ -60,6 +60,16 @@ def main() -> None:
     )
     memory = JsonlMemoryStore(args.memory)
     budget = Budget.from_window(args.headroom) if args.headroom else None
+    if budget is not None:
+        # Use a local exact tokenizer for accounting when available; else keep the
+        # built-in heuristic. Ground-truth Claude counts need the Anthropic API.
+        try:
+            from ai_framework.headroom import set_token_counter, tiktoken_counter
+
+            set_token_counter(tiktoken_counter())
+            print("headroom  : using tiktoken for token accounting")
+        except Exception:
+            print("headroom  : tiktoken not installed; using char heuristic")
     run = run_loop(config, _make_backend(args.backend), registry, memory, budget)
 
     print(f"=== Run: {config.goal} -> {config.target} [{config.backend}] ===")
