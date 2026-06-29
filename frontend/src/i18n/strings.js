@@ -1,0 +1,301 @@
+// UI strings, keyed by locale. Content (the dictionary cards) is localized separately via
+// the *.vi.md siblings; this file covers only the chrome (menus, labels, buttons).
+export const STRINGS = {
+  en: {
+    brand: "SecForge",
+    subtitle: "Security Platform",
+    searchPlaceholder: "Search the dictionary…",
+    noResults: "No classes match",
+    resultsCount: (n) => `${n} ${n === 1 ? "class" : "classes"}`,
+    onThisPage: "On this page",
+    overview: "Overview",
+    heroKicker: "Vulnerability Dictionary",
+    heroTitle: "Web vulnerability classes.",
+    heroLead:
+      "A browsable, searchable catalog of web-vulnerability classes — what each one is, how it works, how to detect it, and how to find CVEs from scratch.",
+    statClasses: "classes",
+    statCategories: "categories",
+    statComplete: "complete",
+    statBilingual: "bilingual",
+    browseBy: "Browse by category",
+    open: "Open",
+    complete: "Complete",
+    stub: "Draft",
+    deepDive: "Read",
+    authNote:
+      "For authorized testing, CTFs, and defending your own projects only.",
+    langName: "English",
+
+    // ── Primary navigation ──
+    navDashboard: "Dashboard",
+    navDocs: "Docs",
+    navPentest: "Pentest",
+    navAi: "AI",
+    navRouter: "Router",
+
+    // ── Dashboard (profile) ──
+    profileKicker: "Profile",
+    available: "Open to engagements",
+    about: "About",
+    focusAreas: "Focus areas",
+    building: "What I'm building",
+    live: "Live",
+    planned: "Planned",
+    statTools: "tools",
+    statPhases: "phases",
+    docsBlurb: "Browse the vulnerability knowledge base — what each flaw is and how to find it.",
+    pentestBlurb: "The tools I reach for, grouped by engagement phase, linked to the docs.",
+
+    // ── Pentest ──
+    pentestKicker: "Pentest Toolkit",
+    pentestTitle: "The tools you reach for, by engagement phase.",
+    pentestLead:
+      "A curated reference of pentest tooling — from recon to post-exploitation — each with a representative command and links to the relevant knowledge-base entries.",
+    toolSearchPlaceholder: "Search tools…",
+    allPhases: "All",
+    relatedDocs: "Docs:",
+    toolsMatching: (n) => `${n} ${n === 1 ? "tool" : "tools"} matching`,
+    toolsTotal: (n, p) => `${n} tools across ${p} phases`,
+    noTools: "No tools match your filters.",
+
+    // ── AI Agent console ──
+    aiKicker: "AI Agent",
+    aiTitle: "Run an AI pentest agent.",
+    aiLead:
+      "Drive the Hermes agent loop against an authorized target with the AI provider and model of your choice. It reasons step by step, uses the platform's tools, remembers what it learns, and budgets its own context.",
+    aiMemoryTitle: "Remembers (Hermes)",
+    aiMemoryNote:
+      "Each run records facts, attempts, and dead ends, then recalls them next time — so the agent builds on what it already did.",
+    aiBudgetTitle: "Budgets context (Headroom)",
+    aiBudgetNote:
+      "Headroom fits every model call inside the context window, reserving output room and compacting old turns so long runs never overflow.",
+    aiPersonaTitle: "Thinks, not scripts",
+    aiPersonaNote:
+      "The agent reasons like a curious human pentester — hypotheses from evidence — and acts only on targets you authorize.",
+    aiProvider: "Provider",
+    aiModel: "Model",
+    aiModelPlaceholder: "model id (e.g. claude-sonnet-4-6)",
+    aiGoal: "Goal",
+    aiGoalPlaceholder: "e.g. Find an auth bypass on the login endpoint",
+    aiTarget: "Target",
+    aiAuthorized: "Authorized targets",
+    aiAuthPlaceholder: "comma-separated, e.g. testsite.local, 127.0.0.1",
+    aiBudget: "Step budget",
+    aiRun: "Run agent",
+    aiRunning: "Running…",
+    aiOnline: "online",
+    aiOffline: "not running",
+    aiKeySet: "key set",
+    aiNoKey: "no key",
+    aiAuthNote:
+      "Authorized testing only. The agent refuses any target not in your authorized list.",
+    aiBackendDown: "Could not reach the SecForge backend — start it with npm run dev:all",
+    aiSetupTitle: "{name} isn't running",
+    aiSetupLead:
+      "This provider is a local proxy you run separately — it manages your AI accounts. Install and launch it, add your accounts in its dashboard, then reload.",
+    aiRepo: "Repository",
+    aiOpenDashboard: "Open dashboard",
+    aiNoRun: "Configure a run on the left, then hit Run agent.",
+    aiTurn: "Turn",
+    aiTurns: "turns",
+    aiPlan: "Next step",
+    aiMode: "Run with",
+    aiModeRouter: "AI pool (router)",
+    aiModeOffline: "Offline (rule-based)",
+    aiNoAccounts: "No AI accounts yet",
+    aiGoToRouter: "Add on Router",
+    aiAccountsReady: "account(s) in pool",
+    aiMemHeading: "What the agent remembers",
+    aiMemEmpty: "Nothing learned for this target yet — runs will fill this in.",
+
+    // ── AI Router page ──
+    routerKicker: "AI Router",
+    routerTitle: "Your AI resource pool.",
+    routerLead:
+      "Add as many AI accounts as you like — any OpenAI-compatible provider. The router rotates across them, falls back automatically, and parks any account that gets rate-limited or banned, so the agent keeps running on whatever capacity you have.",
+    rtAddAccount: "Add account",
+    rtType: "Provider",
+    rtPickType: "Choose a provider…",
+    rtLabel: "Label",
+    rtBaseUrl: "Base URL",
+    rtApiKey: "API key",
+    rtModel: "Model",
+    rtFetchModels: "Fetch models from this endpoint",
+    rtTier: "Tier",
+    rtTier_subscription: "Subscription",
+    rtTier_standard: "Standard",
+    rtTier_free: "Free",
+    rtAdd: "Add to pool",
+    rtPolicy: "Rotation policy",
+    rtPolicyTiered: "Tiered fallback",
+    rtPolicyRR: "Round-robin",
+    rtPolicyTieredNote: "Try subscription accounts first, then standard, then free — fall through on failure.",
+    rtPolicyRRNote: "Cycle evenly across all enabled accounts.",
+    rtPool: "Pool",
+    rtEmpty: "No accounts yet. Add one on the left to give the agent an AI to run on.",
+    rtUnused: "not used yet",
+    rtCooling: "cooling down",
+    rtEnable: "Enable",
+    rtDisable: "Disable",
+    rtDelete: "Remove",
+    rtHow:
+      "Rotation is automatic: on a 429 (rate limit) an account cools down briefly; on 401/403 (bad/banned key) it's parked longer. Keys are stored only on the backend and never shown again. Add free-tier accounts to keep going when paid ones are exhausted.",
+  },
+  vi: {
+    brand: "SecForge",
+    subtitle: "Nền tảng bảo mật",
+    searchPlaceholder: "Tìm trong từ điển…",
+    noResults: "Không có lớp lỗ hổng phù hợp",
+    resultsCount: (n) => `${n} lớp lỗ hổng`,
+    onThisPage: "Trong trang này",
+    overview: "Tổng quan",
+    heroKicker: "Từ điển lỗ hổng",
+    heroTitle: "Các lớp lỗ hổng web.",
+    heroLead:
+      "Danh mục lỗ hổng web có thể duyệt và tìm kiếm — mỗi lớp là gì, hoạt động ra sao, cách phát hiện, và cách tự tìm CVE từ đầu.",
+    statClasses: "lớp",
+    statCategories: "nhóm",
+    statComplete: "hoàn chỉnh",
+    statBilingual: "song ngữ",
+    browseBy: "Duyệt theo nhóm",
+    open: "Mở",
+    complete: "Hoàn chỉnh",
+    stub: "Bản nháp",
+    deepDive: "Đọc",
+    authNote: "Chỉ dành cho kiểm thử được ủy quyền, CTF và bảo vệ dự án của bạn.",
+    langName: "Tiếng Việt",
+
+    // ── Primary navigation ──
+    navDashboard: "Hồ sơ",
+    navDocs: "Tài liệu",
+    navPentest: "Pentest",
+    navAi: "AI",
+    navRouter: "Router",
+
+    // ── Dashboard (profile) ──
+    profileKicker: "Hồ sơ",
+    available: "Sẵn sàng nhận dự án",
+    about: "Giới thiệu",
+    focusAreas: "Lĩnh vực trọng tâm",
+    building: "Đang xây dựng",
+    live: "Đã chạy",
+    planned: "Dự kiến",
+    statTools: "công cụ",
+    statPhases: "giai đoạn",
+    docsBlurb: "Duyệt cơ sở tri thức lỗ hổng — mỗi lỗi là gì và cách tìm ra nó.",
+    pentestBlurb: "Bộ công cụ tôi hay dùng, theo từng giai đoạn, liên kết tới tài liệu.",
+
+    // ── Pentest ──
+    pentestKicker: "Bộ công cụ Pentest",
+    pentestTitle: "Công cụ bạn cần, theo từng giai đoạn tấn công.",
+    pentestLead:
+      "Tuyển tập công cụ pentest — từ trinh sát đến hậu khai thác — mỗi công cụ kèm một lệnh tiêu biểu và liên kết tới mục tri thức liên quan.",
+    toolSearchPlaceholder: "Tìm công cụ…",
+    allPhases: "Tất cả",
+    relatedDocs: "Tài liệu:",
+    toolsMatching: (n) => `${n} công cụ phù hợp`,
+    toolsTotal: (n, p) => `${n} công cụ trong ${p} giai đoạn`,
+    noTools: "Không có công cụ nào khớp bộ lọc.",
+
+    // ── AI Agent console ──
+    aiKicker: "Tác nhân AI",
+    aiTitle: "Chạy tác nhân pentest AI.",
+    aiLead:
+      "Điều khiển vòng lặp tác nhân Hermes nhắm vào một đích được ủy quyền, với nhà cung cấp và mô hình AI bạn chọn. Nó suy luận từng bước, dùng công cụ của nền tảng, ghi nhớ điều học được, và tự cân đối ngữ cảnh.",
+    aiMemoryTitle: "Ghi nhớ (Hermes)",
+    aiMemoryNote:
+      "Mỗi lần chạy ghi lại dữ kiện, các lần thử và ngõ cụt, rồi gợi lại ở lần sau — nên tác nhân kế thừa những gì đã làm.",
+    aiBudgetTitle: "Cân đối ngữ cảnh (Headroom)",
+    aiBudgetNote:
+      "Headroom nhét mỗi lần gọi mô hình vừa cửa sổ ngữ cảnh, chừa chỗ cho đầu ra và nén các lượt cũ để phiên dài không tràn.",
+    aiPersonaTitle: "Tư duy, không máy móc",
+    aiPersonaNote:
+      "Tác nhân suy luận như một pentester tò mò — đặt giả thuyết từ bằng chứng — và chỉ hành động trên đích bạn ủy quyền.",
+    aiProvider: "Nhà cung cấp",
+    aiModel: "Mô hình",
+    aiModelPlaceholder: "mã mô hình (vd: claude-sonnet-4-6)",
+    aiGoal: "Mục tiêu",
+    aiGoalPlaceholder: "vd: Tìm lỗi vượt xác thực ở endpoint đăng nhập",
+    aiTarget: "Đích",
+    aiAuthorized: "Đích được ủy quyền",
+    aiAuthPlaceholder: "ngăn cách bằng dấu phẩy, vd: testsite.local, 127.0.0.1",
+    aiBudget: "Ngân sách bước",
+    aiRun: "Chạy tác nhân",
+    aiRunning: "Đang chạy…",
+    aiOnline: "trực tuyến",
+    aiOffline: "chưa chạy",
+    aiKeySet: "có khóa",
+    aiNoKey: "chưa có khóa",
+    aiAuthNote:
+      "Chỉ kiểm thử được ủy quyền. Tác nhân từ chối mọi đích không nằm trong danh sách ủy quyền.",
+    aiBackendDown: "Không kết nối được backend SecForge — chạy npm run dev:all",
+    aiSetupTitle: "{name} chưa chạy",
+    aiSetupLead:
+      "Nhà cung cấp này là proxy cục bộ bạn chạy riêng — nó quản lý các tài khoản AI của bạn. Cài và khởi chạy, thêm tài khoản trong bảng điều khiển của nó, rồi tải lại.",
+    aiRepo: "Kho mã nguồn",
+    aiOpenDashboard: "Mở bảng điều khiển",
+    aiNoRun: "Cấu hình bên trái, rồi nhấn Chạy tác nhân.",
+    aiTurn: "Lượt",
+    aiTurns: "lượt",
+    aiPlan: "Bước tiếp",
+    aiMode: "Chạy bằng",
+    aiModeRouter: "Bể AI (router)",
+    aiModeOffline: "Offline (theo luật)",
+    aiNoAccounts: "Chưa có tài khoản AI",
+    aiGoToRouter: "Thêm ở Router",
+    aiAccountsReady: "tài khoản trong bể",
+    aiMemHeading: "Tác nhân đang nhớ gì",
+    aiMemEmpty: "Chưa học được gì cho đích này — các lần chạy sẽ bổ sung.",
+
+    // ── AI Router page ──
+    routerKicker: "AI Router",
+    routerTitle: "Bể tài nguyên AI của bạn.",
+    routerLead:
+      "Thêm bao nhiêu tài khoản AI tùy thích — bất kỳ nhà cung cấp tương thích OpenAI nào. Router luân phiên giữa chúng, tự động dự phòng, và tạm ngưng tài khoản bị giới hạn tốc độ hoặc bị chặn, để tác nhân luôn chạy được trên năng lực bạn có.",
+    rtAddAccount: "Thêm tài khoản",
+    rtType: "Nhà cung cấp",
+    rtPickType: "Chọn nhà cung cấp…",
+    rtLabel: "Nhãn",
+    rtBaseUrl: "Base URL",
+    rtApiKey: "Khóa API",
+    rtModel: "Mô hình",
+    rtFetchModels: "Lấy danh sách mô hình từ endpoint này",
+    rtTier: "Hạng",
+    rtTier_subscription: "Thuê bao",
+    rtTier_standard: "Tiêu chuẩn",
+    rtTier_free: "Miễn phí",
+    rtAdd: "Thêm vào bể",
+    rtPolicy: "Chính sách luân phiên",
+    rtPolicyTiered: "Dự phòng theo hạng",
+    rtPolicyRR: "Xoay vòng",
+    rtPolicyTieredNote: "Ưu tiên tài khoản thuê bao, rồi tiêu chuẩn, rồi miễn phí — chuyển tiếp khi lỗi.",
+    rtPolicyRRNote: "Luân phiên đều giữa tất cả tài khoản đang bật.",
+    rtPool: "Bể",
+    rtEmpty: "Chưa có tài khoản. Thêm một tài khoản bên trái để tác nhân có AI để chạy.",
+    rtUnused: "chưa dùng",
+    rtCooling: "đang tạm ngưng",
+    rtEnable: "Bật",
+    rtDisable: "Tắt",
+    rtDelete: "Xóa",
+    rtHow:
+      "Luân phiên tự động: gặp 429 (giới hạn tốc độ) tài khoản tạm ngưng ngắn; gặp 401/403 (khóa sai/bị chặn) ngưng lâu hơn. Khóa chỉ lưu ở backend và không hiển thị lại. Thêm tài khoản miễn phí để tiếp tục khi tài khoản trả phí cạn.",
+  },
+};
+
+export const LOCALES = ["en", "vi"];
+
+// Catalog category names come from the (English) INDEX.md; this maps them to Vietnamese.
+// Keep keys in sync with the `## ` headings in vuln_search/catalog/INDEX.md.
+const CATEGORY_VI = {
+  Injection: "Tiêm nhiễm (Injection)",
+  "Client-side": "Phía client (Client-side)",
+  "Authentication & identity": "Xác thực & danh tính",
+  "Server-side & infrastructure": "Phía server & hạ tầng",
+  "APIs & modern": "API & hiện đại",
+  Other: "Khác",
+};
+
+/** Localize a catalog category name. English passes through (en locale or unknown name). */
+export function localizeCategory(name, locale) {
+  return locale === "vi" ? CATEGORY_VI[name] ?? name : name;
+}

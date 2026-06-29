@@ -14,44 +14,44 @@ Vietnamese `README.vi.md` exists. Bilingual conventions: [`docs/SKILLS_AND_I18N.
 
 ## Injection
 - ✅ 🇻🇳 [SQL Injection](sql_injection/README.md)
-- 🟡 [NoSQL Injection](nosql_injection/README.md)
-- 🟡 [OS Command Injection](os_command_injection/README.md)
-- 🟡 [Server-Side Template Injection (SSTI)](ssti/README.md)
-- 🟡 [XML External Entity (XXE)](xxe/README.md)
-- 🟡 [Path Traversal](path_traversal/README.md)
+- ✅ [NoSQL Injection](nosql_injection/README.md)
+- ✅ [OS Command Injection](os_command_injection/README.md)
+- ✅ [Server-Side Template Injection (SSTI)](ssti/README.md)
+- ✅ [XML External Entity (XXE)](xxe/README.md)
+- ✅ [Path Traversal](path_traversal/README.md)
 
 ## Client-side
 - ✅ 🇻🇳 [Cross-Site Scripting (XSS)](xss/README.md)
-- 🟡 [DOM-Based Vulnerabilities](dom_based/README.md)
-- 🟡 [Cross-Site Request Forgery (CSRF)](csrf/README.md)
-- 🟡 [Clickjacking](clickjacking/README.md)
-- 🟡 [CORS Misconfiguration](cors/README.md)
-- 🟡 [Prototype Pollution](prototype_pollution/README.md)
+- ✅ [DOM-Based Vulnerabilities](dom_based/README.md)
+- ✅ [Cross-Site Request Forgery (CSRF)](csrf/README.md)
+- ✅ [Clickjacking](clickjacking/README.md)
+- ✅ [CORS Misconfiguration](cors/README.md)
+- ✅ [Prototype Pollution](prototype_pollution/README.md)
 
 ## Authentication & identity
-- 🟡 [Authentication Vulnerabilities](broken_authentication/README.md)
-- 🟡 [JWT Attacks](jwt/README.md)
-- 🟡 [OAuth 2.0 Vulnerabilities](oauth/README.md)
-- 🟡 [Access Control Vulnerabilities](broken_access_control/README.md)
+- ✅ [Authentication Vulnerabilities](broken_authentication/README.md)
+- ✅ [JWT Attacks](jwt/README.md)
+- ✅ [OAuth 2.0 Vulnerabilities](oauth/README.md)
+- ✅ [Access Control Vulnerabilities](broken_access_control/README.md)
 
 ## Server-side & infrastructure
 - ✅ 🇻🇳 [Server-Side Request Forgery (SSRF)](ssrf/README.md)
-- 🟡 [HTTP Host Header Attacks](http_host_header/README.md)
-- 🟡 [HTTP Request Smuggling](http_request_smuggling/README.md)
-- 🟡 [Web Cache Deception](web_cache_deception/README.md)
-- 🟡 [Web Cache Poisoning](web_cache_poisoning/README.md)
+- ✅ [HTTP Host Header Attacks](http_host_header/README.md)
+- ✅ [HTTP Request Smuggling](http_request_smuggling/README.md)
+- ✅ [Web Cache Deception](web_cache_deception/README.md)
+- ✅ [Web Cache Poisoning](web_cache_poisoning/README.md)
 
 ## APIs & modern
-- 🟡 [API Testing & Security](api_security/README.md)
-- 🟡 [GraphQL API Vulnerabilities](graphql/README.md)
-- 🟡 [WebSocket Vulnerabilities](websockets/README.md)
-- 🟡 [Web LLM / Prompt Injection](llm_attacks/README.md)
+- ✅ [API Testing & Security](api_security/README.md)
+- ✅ [GraphQL API Vulnerabilities](graphql/README.md)
+- ✅ [WebSocket Vulnerabilities](websockets/README.md)
+- ✅ [Web LLM / Prompt Injection](llm_attacks/README.md)
 
 ## Other
-- 🟡 [File Upload Vulnerabilities](file_upload/README.md)
-- 🟡 [Race Conditions](race_condition/README.md)
-- 🟡 [Information Disclosure](information_disclosure/README.md)
-- 🟡 [Insecure Deserialization](insecure_deserialization/README.md)
+- ✅ [File Upload Vulnerabilities](file_upload/README.md)
+- ✅ [Race Conditions](race_condition/README.md)
+- ✅ [Information Disclosure](information_disclosure/README.md)
+- ✅ [Insecure Deserialization](insecure_deserialization/README.md)
 
 ---
 

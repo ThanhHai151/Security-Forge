@@ -15,3 +15,5 @@ __pycache__/
 
 # Tooling state
 .serena/
+ai_accounts.json
+memory_store.jsonl

