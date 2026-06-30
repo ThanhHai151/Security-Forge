@@ -17,3 +17,6 @@ __pycache__/
 .serena/
 ai_accounts.json
 memory_store.jsonl
+
+.cladue/
+.github/
