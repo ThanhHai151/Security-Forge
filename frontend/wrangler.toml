@@ -1,12 +1,18 @@
-# Cloudflare Pages — config-as-code. Lets `wrangler pages deploy` run with no flags
-# (reads the output dir from here) and documents the project name in-repo.
+# Cloudflare Workers — Static Assets. Deploys the built SPA in ./dist as a
+# static-assets-only Worker (no server code). This is the config the dashboard
+# "Workers" import flow uses:
 #
-#   cd frontend
-#   npm run build
-#   npx wrangler pages deploy        # uploads ./dist to the "security-forge" project
+#   Build command:   npm run build
+#   Deploy command:  npx wrangler deploy
+#   Root directory:  frontend          (Advanced settings — REQUIRED)
 #
-# The dashboard "Git integration" path does NOT need this file — it uses the build
-# settings configured there (root dir: frontend, build: npm run build, output: dist).
+# `wrangler deploy` runs from the Root directory (frontend/), reads this file,
+# and uploads ./dist (i.e. frontend/dist). The _headers and _redirects files in
+# dist/ are honored by Workers Static Assets.
 name = "security-forge"
-pages_build_output_dir = "dist"
 compatibility_date = "2024-11-01"
+
+[assets]
+directory = "./dist"
+# Hash-router SPA: serve index.html for any unmatched path so deep links work.
+not_found_handling = "single-page-application"
