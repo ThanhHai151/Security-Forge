@@ -1,0 +1,12 @@
+# Cloudflare Pages — config-as-code. Lets `wrangler pages deploy` run with no flags
+# (reads the output dir from here) and documents the project name in-repo.
+#
+#   cd frontend
+#   npm run build
+#   npx wrangler pages deploy        # uploads ./dist to the "security-forge" project
+#
+# The dashboard "Git integration" path does NOT need this file — it uses the build
+# settings configured there (root dir: frontend, build: npm run build, output: dist).
+name = "security-forge"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-11-01"

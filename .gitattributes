@@ -1,0 +1,8 @@
+# Keep HTML (and the Cloudflare control files) LF on every platform. The CSP in
+# frontend/public/_headers allow-lists the inline theme script by its SHA-256 hash,
+# which is computed over LF bytes — a CRLF checkout on Windows (core.autocrlf=true)
+# would change the hash and silently break it on the Linux build. Pinning EOL here
+# makes the hash byte-stable across dev and Cloudflare.
+*.html      text eol=lf
+_headers    text eol=lf
+_redirects  text eol=lf

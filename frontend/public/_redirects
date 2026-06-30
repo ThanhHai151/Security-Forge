@@ -1,0 +1,5 @@
+# SPA fallback. The app uses hash routing (#/dashboard, #/docs/<slug>), so the HTTP
+# path is almost always "/", but this rewrite guarantees any deep path serves the app
+# shell instead of a 404. Cloudflare matches real static files (e.g. /assets/*) first,
+# so this never shadows the hashed JS/CSS bundles.
+/*    /index.html    200

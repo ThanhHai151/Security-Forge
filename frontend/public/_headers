@@ -1,0 +1,18 @@
+# Cloudflare Pages security headers. Applied to every response.
+# CSP notes:
+#  - script-src is strict (no 'unsafe-inline'): the only inline script is the theme
+#    bootstrap in index.html, allow-listed by its SHA-256 hash. If you edit that script,
+#    recompute the hash (see frontend/README.md "Deploy") or the theme flash-guard breaks.
+#  - style-src allows 'unsafe-inline' for React inline styles + the Google Fonts stylesheet.
+#  - fonts come from Google Fonts (Geist); img-src allows the inline data: SVG favicon.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-m3doxacfTp5ZzGhwV9z+4cukZVcVXTPXWP6bPF8y460='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+
+# Hashed, content-addressed bundles never change — cache them for a year.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
