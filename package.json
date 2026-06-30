@@ -1,0 +1,9 @@
+{
+  "name": "security-forge",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Root build orchestration for Cloudflare deploys: the web app lives in frontend/, this builds it from the repo root so no Root-directory setting is needed.",
+  "scripts": {
+    "build": "cd frontend && npm ci && npm run build"
+  }
+}

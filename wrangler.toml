@@ -1,0 +1,16 @@
+# Cloudflare Workers — Static Assets, deployed from the REPO ROOT.
+# The dashboard import flow runs build + deploy from the repo root (no Root
+# directory set), so the config and asset path are resolved from here:
+#
+#   Build command:   npm run build        (root package.json: builds frontend/)
+#   Deploy command:  npx wrangler deploy   (reads this file, uploads frontend/dist)
+#
+# frontend/wrangler.toml is the equivalent config for running `wrangler deploy`
+# from inside frontend/ during local development.
+name = "security-forge"
+compatibility_date = "2024-11-01"
+
+[assets]
+directory = "./frontend/dist"
+# Hash-router SPA: serve index.html for any unmatched path so deep links work.
+not_found_handling = "single-page-application"
